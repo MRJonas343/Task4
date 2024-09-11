@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+*Full Stack App
 
-## Getting Started
+--Non-autheticated user should't have access to the admin-panel
 
-First, run the development server:
+--Authenticated users have access to the admin-panel
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+--All users should be able to block or delete themselves or any other user.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+--If user account is blocked or deleted any next user’s request should redirect to the login page.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+--User can use any non-empty password (even one character). 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+--Blocked user should not be able to login, deleted user can re-register.
 
-## Learn More
+--YOU HAVE TO CREATE A UNIQUE INDEX IN THE SELECTED DATABASE
 
-To learn more about Next.js, take a look at the following resources:
+--Use css framework -- next UI + Tailwind 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Pages
+ --Login
+ --Register
+ --admin-panel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+admin panel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+					   block(red button with text)   unblock(icon)  delete(icon)
+ 🔳    id | name | e-mail | last-login | registration-time | status
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ ✅     1  Jhon    jhon3@s   12/8/2024    12/7/2024           active
+
+ 🔳     2  Mau     mau3@ji   12/8/2024    12/7/2024           blocked
+
+
+
+
+how to update data in the table
+
+ask for the data in a server function
+
+then send to the user the component with the data as a prop
+
+the data should be render then
+
+
+
+
+Create postgresSQLDB in Vercel or Turso
+Create Server Actions to manipulate the DB
+Add use Optimistic to improve UX
+
+
+Start creating the Auth Module
