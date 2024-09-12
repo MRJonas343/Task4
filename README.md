@@ -12,9 +12,6 @@
 
 --Blocked user should not be able to login, deleted user can re-register.
 
---YOU HAVE TO CREATE A UNIQUE INDEX IN THE SELECTED DATABASE
-
---Use css framework -- next UI + Tailwind 
 
 Pages
  --Login
@@ -41,7 +38,6 @@ ask for the data in a server function
 then send to the user the component with the data as a prop
 
 the data should be render then
-
 
 
 

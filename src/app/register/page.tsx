@@ -1,5 +1,6 @@
-import { Input } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
+import { Input, Button } from "@nextui-org/react"
+import { newUser } from "@/interfaces/user.interface"
+import { signIn } from "@/auth"
 
 const page = () => {
 	return (
@@ -7,14 +8,26 @@ const page = () => {
 			<section className="flex flex-col w-full gap-4 max-w-[350px]">
 				<h1 className={"font-bold text-center mt-4"}>Register</h1>
 
-				<Input placeholder="name" />
-				<Input placeholder="Email" />
-				<Input placeholder="Password" />
-				<Input placeholder="Confirm Password" />
+				<form
+					action={async (formData) => {
+						"use server"
 
-				<Button>Register</Button>
+						const credentials = {
+							name: formData.get("name"),
+							email: formData.get("email"),
+							password: formData.get("password"),
+						}
+
+						await signIn("credentials", credentials)
+					}}
+				>
+					<Input name="name" placeholder="Name" />
+					<Input name="email" placeholder="Email" />
+					<Input name="password" placeholder="Password" type="password" />
+					<Button type="submit">Register</Button>
+				</form>
 			</section>
 		</main>
-	);
-};
-export default page;
+	)
+}
+export default page
