@@ -12,7 +12,7 @@ const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 				<Button
 					onClick={async () => {
 						if (selectedIds !== "all" && selectedIds.size === 0) {
-							return console.log("No keys selected")
+							return
 						}
 						await actions.lockSelectedUsers(selectedIds)
 					}}
@@ -26,7 +26,7 @@ const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 					color="default"
 					onClick={async () => {
 						if (selectedIds !== "all" && selectedIds.size === 0) {
-							return console.log("No keys selected")
+							return
 						}
 						await actions.unlockSelectedUsers(selectedIds)
 					}}
@@ -39,7 +39,7 @@ const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 				<Button
 					onClick={async () => {
 						if (selectedIds !== "all" && selectedIds.size === 0) {
-							return console.log("No keys selected")
+							return
 						}
 						await actions.deleteSelectedUsers(selectedIds)
 					}}

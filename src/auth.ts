@@ -37,8 +37,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 					lastLogin: new Date(),
 				})
 
-				console.log(result)
-
 				// const user = await db.query.UsersTable.findFirst({
 				// 	where: eq(UsersTable.email, email),
 				// })

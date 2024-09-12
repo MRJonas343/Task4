@@ -26,7 +26,7 @@ const AdminTable: FC<{ users: RegisteredUser[] }> = ({ users }) => {
 	const handleSelectionChange = (keys: "all" | Set<Key>) => {
 		if (keys !== "all" && keys.size === 0) {
 			setSelectedIds(keys)
-			return console.log("No keys selected")
+			return
 		}
 
 		setSelectedIds(keys)

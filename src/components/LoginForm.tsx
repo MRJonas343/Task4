@@ -6,7 +6,6 @@ import { authenticate } from "@/actions"
 
 const LoginForm = () => {
 	const [state, dispatch] = useFormState(authenticate, undefined)
-	console.log(state)
 	return (
 		<form action={dispatch}>
 			<Input name="email" placeholder="Email" />
