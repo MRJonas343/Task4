@@ -1,11 +1,9 @@
-import { db } from "@/drizzle/connection"
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { signInValidator } from "./validators/credentials.validator"
 import Credentials from "next-auth/providers/credentials"
-import NextAuth from "next-auth"
-import { signInValidator } from "./actions/validators/authValidator"
+import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { db, UsersTable } from "./drizzle"
 import { eq } from "drizzle-orm"
-import { UsersTable } from "./drizzle/user.schema"
-import { hashPassword } from "./utils/passwordUtils"
+import NextAuth from "next-auth"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	adapter: DrizzleAdapter(db),
@@ -19,7 +17,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 				password: {},
 			},
 			authorize: async (credentials) => {
-				console.log("im here")
 				const parseCredentials = signInValidator.safeParse(credentials)
 
 				if (!parseCredentials.success) {

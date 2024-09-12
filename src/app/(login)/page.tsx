@@ -1,5 +1,5 @@
+import LoginForm from "@/components/LoginForm"
 import { Link } from "@nextui-org/react"
-import LoginForm from "./ui/LoginForm"
 
 const page = () => {
 	return (

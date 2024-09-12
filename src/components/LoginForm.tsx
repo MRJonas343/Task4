@@ -2,7 +2,7 @@
 
 import { Button, Input } from "@nextui-org/react"
 import { useFormState } from "react-dom"
-import { authenticate } from "@/actions/auth/login.action"
+import { authenticate } from "@/actions"
 
 const LoginForm = () => {
 	const [state, dispatch] = useFormState(authenticate, undefined)

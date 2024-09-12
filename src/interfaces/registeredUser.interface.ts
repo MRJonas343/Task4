@@ -2,8 +2,8 @@ export interface RegisteredUser {
 	id: number
 	name: string
 	email: string
-	lastLogin: Date | null
-	registrationTime: Date
+	lastLogin: string | null
+	registrationTime: string | null
 	status: string | null
 }
 

@@ -1,19 +1,80 @@
 "use server"
+import { db, UsersTable } from "@/drizzle"
+import { fakeUsers } from "@/seed"
+import { hashPassword } from "@/utils"
+import { inArray } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
+import { Key } from "react"
 
-import { db } from "@/drizzle/connection"
-import { UsersTable } from "@/drizzle/user.schema"
-import { fakeUsers } from "@/interfaces/fakeData"
+const lockSelectedUsers = async (userIds: Set<Key> | "all") => {
+	if (userIds === "all") {
+		const result = await db.update(UsersTable).set({ status: "Blocked" })
+		revalidatePath("/admin-panel")
+		return "All users locked"
+	}
 
-const lockSelectedUsers = () => {}
+	const idsArray = Array.from(userIds).map((id) => Number(id))
+	const result = await db
+		.update(UsersTable)
+		.set({ status: "Blocked" })
+		.where(inArray(UsersTable.id, idsArray))
 
-const unlockSelectedUsers = () => {}
+	revalidatePath("/admin-panel")
+	return "Users locked"
+}
 
-const deleteSelectedUsers = () => {}
+const unlockSelectedUsers = async (userIds: Set<Key> | "all") => {
+	if (userIds === "all") {
+		const result = await db.update(UsersTable).set({ status: "Active" })
+		revalidatePath("/admin-panel")
+		return "All users unlocked"
+	}
 
-const executeSeed = async (): Promise<string> => {
-	console.log("Seeding users...")
+	const idsArray = Array.from(userIds).map((id) => Number(id))
+	const result = await db
+		.update(UsersTable)
+		.set({ status: "Active" })
+		.where(inArray(UsersTable.id, idsArray))
+
+	revalidatePath("/admin-panel")
+	return "Users unlocked"
+}
+
+const deleteSelectedUsers = async (userIds: Set<Key> | "all") => {
+	if (userIds === "all") {
+		const result = await db.delete(UsersTable)
+		revalidatePath("/admin-panel")
+		return "All users deleted"
+	}
+
+	const idsArray = Array.from(userIds).map((id) => Number(id))
+	const result = await db
+		.delete(UsersTable)
+		.where(inArray(UsersTable.id, idsArray))
+
+	revalidatePath("/admin-panel")
+	return "Users deleted"
+}
+
+const executeSeed = async () => {
 	try {
-		const result = await db.insert(UsersTable).values(fakeUsers)
+		for (const user of fakeUsers) {
+			user.password = await hashPassword(user.password)
+		}
+
+		const existingEmails = await db
+			.select({
+				email: UsersTable.email,
+			})
+			.from(UsersTable)
+
+		const filteredUsers = fakeUsers.filter(
+			(user) =>
+				!existingEmails.some((existing) => existing.email === user.email),
+		)
+
+		const result = await db.insert(UsersTable).values(filteredUsers)
+		revalidatePath("/admin-panel")
 		return "Seeding complete"
 	} catch (error) {
 		return "Error seeding users"

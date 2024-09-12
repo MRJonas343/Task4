@@ -1,5 +1,4 @@
 import { Input, Button } from "@nextui-org/react"
-import { newUser } from "@/interfaces/user.interface"
 import { signIn } from "@/auth"
 
 const page = () => {
