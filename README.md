@@ -1,49 +1,71 @@
-*Full Stack App
+# Full-Stack Admin Panel Task #4 🚀
 
---Non-autheticated user should't have access to the admin-panel
+## Description 📋
 
---Authenticated users have access to the admin-panel
+This is a full-stack web application featuring an admin panel, login, and registration functionalities. It is built with Next.js, Drizzle ORM, PostgreSQL, Auth.js, and Next UI. The project is 100% type-safe and uses React Hook Form and Zod for data validation. It implements server actions for database operations, with the `useOptimistic` hook providing a smooth, delay-free user experience. Password encryption is handled using bcrypt.
 
---All users should be able to block or delete themselves or any other user.
+## Features 🛠️
 
---If user account is blocked or deleted any next user’s request should redirect to the login page.
+- **Login and Registration**: User authentication with Auth.js.
+- **Admin Panel**: Manage users with features to lock, unlock, and delete users.
+- **Seed Users**: Button to create dummy users for testing.
+- **Data Validation**: React Hook Form and Zod ensure data validity.
+- **Optimistic Updates**: Smooth, delay-free user experience.
+- **Security**: Password encryption with bcrypt.
 
---User can use any non-empty password (even one character). 
+## Requirements ⚙️
 
---Blocked user should not be able to login, deleted user can re-register.
+1. **Node.js**: Ensure Node.js is installed.
+2. **PostgreSQL**: You'll need a PostgreSQL database.
 
+## Project Setup ✍️
 
-Pages
- --Login
- --Register
- --admin-panel
+1. **Clone the repository**:
 
+    ```bash
+    git clone <REPOSITORY_URL>
+    cd <REPOSITORY_NAME>
+    ```
 
-admin panel
+2. **Install dependencies**:
 
-					   block(red button with text)   unblock(icon)  delete(icon)
- 🔳    id | name | e-mail | last-login | registration-time | status
+    ```bash
+    npm install
+    ```
 
- ✅     1  Jhon    jhon3@s   12/8/2024    12/7/2024           active
+3. **Configure environment variables**:
 
- 🔳     2  Mau     mau3@ji   12/8/2024    12/7/2024           blocked
+    - Create a `.env` file in the root of the project and add the following variables:
 
+    ```env
+    POSTGRES_URL=<POSTGRESQL_CONNECTION_URL>
+    POSTGRES_PASSWORD=<POSTGRESQL_PASSWORD>
+    AUTH_SECRET=<AUTH_SECRET>
+    ```
 
+    - Generate an Auth.js secret with the following command:
 
+    ```bash
+    npx auth secret
+    ```
 
-how to update data in the table
+4. **Run the project**:
 
-ask for the data in a server function
+    ```bash
+    npm run dev
+    ```
 
-then send to the user the component with the data as a prop
+    or
 
-the data should be render then
+    ```bash
+    bun dev
+    ```
 
+## Admin Panel 🖥️
 
+- **Seed Users**: Use the "Seed Users" button in the admin panel to create users. You can test user management by deleting and creating users. Clicking this button will regenerate the users. Disclaimer : This button doesn't have useOptimistic 😥
+- **Predefined Accounts**: In the `seed` folder, you can find predefined users if you wish to log in with existing accounts.
 
-Create postgresSQLDB in Vercel or Turso
-Create Server Actions to manipulate the DB
-Add use Optimistic to improve UX
+Enjoy managing your admin panel and testing your application! 🎉
 
-
-Start creating the Auth Module
+Remember your password is secure with me 😇

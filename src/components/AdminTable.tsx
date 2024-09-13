@@ -8,15 +8,18 @@ import {
 	getKeyValue,
 	TableHeader,
 } from "@nextui-org/react"
-import {
-	deleteSelectedUsers,
-	lockSelectedUsers,
-	unlockSelectedUsers,
-} from "@/actions"
 import { FC, Key, startTransition, useOptimistic, useState } from "react"
-import { columns } from "@/constants/tableColumns"
-import Toolbar from "@/components/Toolbar"
+import { optimisticReducer } from "@/utils/optimisticReducer"
 import { RegisteredUser, action } from "@/interfaces"
+import { columns } from "@/constants/tableColumns"
+import * as adminAction from "@/actions/admin"
+import Toolbar from "@/components/Toolbar"
+
+const actionHandlers = {
+	LOCK_USER: adminAction.lockSelectedUsers,
+	UNLOCK_USER: adminAction.unlockSelectedUsers,
+	DELETE_USER: adminAction.deleteSelectedUsers,
+}
 
 const AdminTable: FC<{ users: RegisteredUser[] }> = ({ users }) => {
 	const [selectedIds, setSelectedIds] = useState<Set<Key> | "all">(
@@ -24,66 +27,22 @@ const AdminTable: FC<{ users: RegisteredUser[] }> = ({ users }) => {
 	)
 
 	const handleSelectionChange = (keys: "all" | Set<Key>) => {
-		if (keys !== "all" && keys.size === 0) {
-			setSelectedIds(keys)
-			return
-		}
-
-		setSelectedIds(keys)
+		setSelectedIds(keys === "all" || keys.size > 0 ? keys : new Set())
 	}
 
 	const [optimisticRow, setOptimisticRow] = useOptimistic(
 		users,
-		(state, action: action) => {
-			switch (action) {
-				case "LOCK_USER": {
-					return state.map((user) => {
-						if (selectedIds === "all" || selectedIds.has(user.id)) {
-							return { ...user, status: "Blocked" }
-						}
-						return user
-					})
-				}
-				case "UNLOCK_USER": {
-					return state.map((user) => {
-						if (selectedIds === "all" || selectedIds.has(user.id)) {
-							return { ...user, status: "Active" }
-						}
-						return user
-					})
-				}
-				case "DELETE_USER": {
-					return state.filter(
-						(user) => selectedIds === "all" || !selectedIds.has(user.id),
-					)
-				}
-				case "FAILED": {
-					return state
-				}
-			}
-		},
+		(state, action: action) => optimisticReducer(state, action, selectedIds),
 	)
 
 	const handleOptimisticChange = async (action: action) => {
-		startTransition(() => {
-			setOptimisticRow(action)
-		})
+		if (action === "FAILED") return setOptimisticRow("FAILED")
+
+		startTransition(() => setOptimisticRow(action))
 
 		try {
-			switch (action) {
-				case "LOCK_USER": {
-					await lockSelectedUsers(selectedIds)
-					break
-				}
-				case "UNLOCK_USER": {
-					await unlockSelectedUsers(selectedIds)
-					break
-				}
-				case "DELETE_USER": {
-					await deleteSelectedUsers(selectedIds)
-					break
-				}
-			}
+			const handler = actionHandlers[action]
+			if (handler) await handler(selectedIds)
 		} catch (error) {
 			setOptimisticRow("FAILED")
 		}

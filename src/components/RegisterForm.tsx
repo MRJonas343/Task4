@@ -1,12 +1,12 @@
 "use client"
 import { Button, Input } from "@nextui-org/react"
-import { authenticate } from "@/actions"
-import { useForm } from "react-hook-form"
-import { UserCredentials } from "@/interfaces"
-import { useState } from "react"
+import { CreateUserInput } from "@/interfaces"
 import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { registerUser } from "@/actions"
+import { useState } from "react"
 
-const LoginForm = () => {
+const RegisterForm = () => {
 	const router = useRouter()
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [formError, setFormError] = useState<string | null>(null)
@@ -15,48 +15,55 @@ const LoginForm = () => {
 		formState: { errors },
 		handleSubmit,
 		reset,
-	} = useForm<UserCredentials>()
+	} = useForm<CreateUserInput>()
 
-	const onSubmit = async (data: UserCredentials) => {
+	const onSubmit = async (data: CreateUserInput) => {
 		setIsSubmitting(true)
 		reset()
-		const authStatus = await authenticate(data.email, data.password)
-		if (authStatus === "ERRORLOGIN") setFormError("Invalid email or password")
 
-		if (authStatus === "CREDENTIALSERROR") setFormError("server error")
+		const authStatus = await registerUser(data.name, data.email, data.password)
+
+		if (authStatus === "USER_EXISTS") setFormError("User already exists")
+
+		if (authStatus === "ERROREGISTER") setFormError("Error registering user")
 
 		if (authStatus === "SUCCESS") router.push("/admin-panel")
 
 		setIsSubmitting(false)
 	}
-
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+		<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
 			<Input
+				placeholder="Name"
+				isInvalid={Boolean(errors.name)}
+				errorMessage="This field is required"
+				{...register("name", {
+					required: true,
+				})}
+			/>
+			<Input
+				placeholder="Email"
 				isInvalid={Boolean(errors.email)}
 				errorMessage="This field is required"
-				autoFocus
-				placeholder="Email"
 				{...register("email", {
 					required: true,
 				})}
 			/>
 			<Input
+				placeholder="Password"
 				isInvalid={Boolean(errors.password)}
 				errorMessage="The the password should be at least 1 character long"
 				type="password"
-				placeholder="Password"
 				{...register("password", {
 					required: true,
 					minLength: 1,
 				})}
 			/>
-
 			<Button isLoading={isSubmitting} type="submit">
-				Log in
+				Register
 			</Button>
 			<p className="text-[#f31260] text-sm text-center">{formError}</p>
 		</form>
 	)
 }
-export default LoginForm
+export default RegisterForm

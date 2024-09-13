@@ -2,13 +2,21 @@
 
 import { signIn } from "@/auth"
 
-export async function authenticate(
-	prevState: string | undefined,
-	formData: FormData,
-) {
+export async function authenticate(email: string, password: string) {
 	try {
-		await signIn("credentials", Object.fromEntries(formData))
+		await signIn("credentials", {
+			email,
+			password,
+			redirect: false,
+		})
+
+		return "SUCCESS"
 	} catch (error) {
-		return "Could not log in"
+		// biome-ignore lint/suspicious/noExplicitAny: <Need Flexibility>
+		if ((error as any).type === "CredentialsSignin") {
+			return "ERRORLOGIN"
+		}
+
+		return "CREDENTIALSERROR"
 	}
 }

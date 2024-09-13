@@ -2,8 +2,13 @@
 import { TbLock, TbLockOpen2, TbTrash } from "react-icons/tb"
 import { TableHeaderProps } from "@/interfaces"
 import { Button } from "@nextui-org/react"
-import * as actions from "@/actions"
 import { FC } from "react"
+import {
+	deleteSelectedUsers,
+	executeSeed,
+	lockSelectedUsers,
+	unlockSelectedUsers,
+} from "@/actions/admin"
 
 const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 	return (
@@ -14,7 +19,7 @@ const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 						if (selectedIds !== "all" && selectedIds.size === 0) {
 							return
 						}
-						await actions.lockSelectedUsers(selectedIds)
+						await lockSelectedUsers(selectedIds)
 					}}
 					radius="sm"
 					endContent={<TbLock size={20} />}
@@ -28,7 +33,7 @@ const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 						if (selectedIds !== "all" && selectedIds.size === 0) {
 							return
 						}
-						await actions.unlockSelectedUsers(selectedIds)
+						await unlockSelectedUsers(selectedIds)
 					}}
 					radius="sm"
 					isIconOnly
@@ -41,7 +46,7 @@ const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 						if (selectedIds !== "all" && selectedIds.size === 0) {
 							return
 						}
-						await actions.deleteSelectedUsers(selectedIds)
+						await deleteSelectedUsers(selectedIds)
 					}}
 					color="danger"
 					radius="sm"
@@ -53,7 +58,7 @@ const Toolbar: FC<TableHeaderProps> = ({ selectedIds }) => {
 			<div>
 				<Button
 					onClick={async () => {
-						await actions.executeSeed()
+						await executeSeed()
 					}}
 					radius="sm"
 				>
